@@ -28,7 +28,9 @@ class HungarianMatcher(nn.Module):
     def __init__(self,
                  cost_class: float = 1,
                  cost_bbox: float = 1,
-                 cost_giou: float = 1):
+                 cost_giou: float = 1,
+                 focal_alpha: float = 0.25,
+                 focal_gamma: float = 2):
         """Creates the matcher
 
         Params:
@@ -40,6 +42,8 @@ class HungarianMatcher(nn.Module):
         self.cost_class = cost_class
         self.cost_bbox = cost_bbox
         self.cost_giou = cost_giou
+        self.focal_alpha = focal_alpha
+        self.focal_gamma = focal_gamma
         assert cost_class != 0 or cost_bbox != 0 or cost_giou != 0, "all costs cant be 0"
 
     def forward(self, outputs, targets):
@@ -74,8 +78,8 @@ class HungarianMatcher(nn.Module):
             tgt_bbox = torch.cat([v["boxes"] for v in targets])
 
             # Compute the classification cost.
-            alpha = 0.25
-            gamma = 2.0
+            alpha = self.focal_alpha
+            gamma = self.focal_gamma
             neg_cost_class = (1 - alpha) * (out_prob ** gamma) * (-(1 - out_prob + 1e-8).log())
             pos_cost_class = alpha * ((1 - out_prob) ** gamma) * (-(out_prob + 1e-8).log())
             cost_class = pos_cost_class[:, tgt_ids] - neg_cost_class[:, tgt_ids]
@@ -99,4 +103,6 @@ class HungarianMatcher(nn.Module):
 def build_matcher(args):
     return HungarianMatcher(cost_class=args.set_cost_class,
                             cost_bbox=args.set_cost_bbox,
-                            cost_giou=args.set_cost_giou)
+                            cost_giou=args.set_cost_giou,
+                            focal_alpha=args.focal_alpha,
+                            focal_gamma=args.focal_gamma)

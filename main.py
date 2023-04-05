@@ -35,8 +35,8 @@ def get_args_parser():
     parser.add_argument('--lr_linear_proj_mult', default=0.1, type=float)
     parser.add_argument('--batch_size', default=2, type=int)
     parser.add_argument('--weight_decay', default=1e-4, type=float)
-    parser.add_argument('--epochs', default=50, type=int)
-    parser.add_argument('--lr_drop', default=40, type=int)
+    parser.add_argument('--epochs', default=100, type=int)
+    parser.add_argument('--lr_drop', default=80, type=int)
     parser.add_argument('--lr_drop_epochs', default=None, type=int, nargs='+')
     parser.add_argument('--clip_max_norm', default=0.1, type=float,
                         help='gradient clipping max norm')
@@ -104,6 +104,7 @@ def get_args_parser():
     parser.add_argument('--bbox_loss_coef', default=5, type=float)
     parser.add_argument('--giou_loss_coef', default=2, type=float)
     parser.add_argument('--focal_alpha', default=0.25, type=float)
+    parser.add_argument('--focal_gamma', default=2, type=float)
 
     # dataset parameters
     parser.add_argument('--dataset_file', default='coco')

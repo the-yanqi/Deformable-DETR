@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 
-set -x
+#set -x
 
-EXP_DIR=exps/r50_deformable_detr
 PY_ARGS=${@:1}
 
-python -u main.py \
-    --output_dir ${EXP_DIR} \
+source ~/.bashrc 
+conda activate deformable_detr
+module load cuda/10.0
+module load gcc/6.1.0
+
+python -u /gpfs/data/geraslab/Yanqi/Deformable-DETR/main.py \
+    --coco_path /gpfs/data/geraslab/public_datasets/coco \
     ${PY_ARGS}
